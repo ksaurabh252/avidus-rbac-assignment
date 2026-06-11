@@ -9,7 +9,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-
     <Routes>
       {/* --- PUBLIC ROUTES --- */}
       <Route path="/login" element={<Login />} />
@@ -39,7 +38,6 @@ function App() {
       {/* If the user types a random URL, send them to login */}
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
-
   );
 }
 
