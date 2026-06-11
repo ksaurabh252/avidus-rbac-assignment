@@ -120,8 +120,103 @@ const userLogin = async (req, res) => {
     });
   }
 };
+// Get All Users (Admin Only)
+const getAllUsers = async (req, res) => {
+  try {
+    // Fetch all users except passwords
+    const users = await User.find().select("-password");
+
+    return res.status(200).json({
+      success: true,
+      data: users,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+// Update User Status (Admin Only)
+const updateUserStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    // Update user status by ID
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true },
+    ).select("-password");
+
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+// Delete User (Admin Only)
+const deleteUser = async (req, res) => {
+  try {
+    // Delete user by ID
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User deleted",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+// Get Activity Logs (Admin Only)
+const getActivityLogs = async (req, res) => {
+  try {
+    // Fetch activity logs with user and task details
+    const logs = await activityLog
+      .find()
+      .populate("user", "name email")
+      .populate("taskId", "title")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      data: logs,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   registerUser,
   userLogin,
+  getAllUsers,
+  updateUserStatus,
+  deleteUser,
+  getActivityLogs,
 };
