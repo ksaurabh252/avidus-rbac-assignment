@@ -7,6 +7,7 @@ const {
   getAllUsers,
   updateUserStatus,
   deleteUser,
+  getActivityLogs,
 } = require("../controllers/user.controller");
 
 // --- PUBLIC ROUTES ---
@@ -18,5 +19,6 @@ router.post("/login", userLogin);
 router.get("/", protect, isAdmin, getAllUsers);
 router.put("/:id/status", protect, isAdmin, updateUserStatus);
 router.delete("/:id", protect, isAdmin, deleteUser);
+router.get("/logs", protect, isAdmin, getActivityLogs);
 
 module.exports = router;
